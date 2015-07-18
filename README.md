@@ -1,2 +1,2 @@
 # mashupbox
-Mashup Box for Emek Yizrael hacakathon
+Mashup Box for Emek Yizrael hackathon
