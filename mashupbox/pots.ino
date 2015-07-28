@@ -43,7 +43,7 @@ void potsSetup() {
 }
 
 void readPots() {
-   for(int i = 15; i <  16; i ++) {
+   for(int i = 5; i <  16; i ++) {
       int newValue = readMux(i);
       if (abs(newValue - potsState[i]) > 2) {
           // A change in value!
@@ -51,13 +51,6 @@ void readPots() {
           potsState[i] = newValue;             
       }    
    }
-}
-
-void potChange(int index, int value) {
-   Serial.print("New Value at channel ");
-   Serial.print(index);
-   Serial.print(" : ");
-   Serial.println(value);  
 }
 
 int readMux(int channel){
