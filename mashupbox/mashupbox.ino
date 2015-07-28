@@ -22,6 +22,12 @@ void potChange(int index, int value) {
    Serial.print(value); 
    Serial.print(". Midi Value: "); 
    Serial.println(midiValue);*/    
+   if (index >= 9 && index <= 11) {
+     // Special 'balancing' knobs
+     MIDI.sendControlChange(index, midiValue, 1);
+     MIDI.sendControlChange(index + 10, 127 - midiValue, 1);     
+   } else {
+        MIDI.sendControlChange(index, midiValue, 1);
+   } 
    
-   MIDI.sendControlChange(index, midiValue, 1);
 }
