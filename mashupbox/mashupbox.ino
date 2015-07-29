@@ -22,6 +22,10 @@ void potChange(int index, int value) {
    Serial.print(value); 
    Serial.print(". Midi Value: "); 
    Serial.println(midiValue);*/    
+   // Weird bug in logic
+   if (index == 7) {
+     index = 27;
+   }
    if (index >= 9 && index <= 11) {
      // Special 'balancing' knobs
      MIDI.sendControlChange(index, midiValue, 1);
