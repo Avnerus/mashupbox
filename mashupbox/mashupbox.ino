@@ -3,13 +3,14 @@ MIDI_CREATE_DEFAULT_INSTANCE();
 
 void setup() {
   potsSetup();
+  buttonSetup();
   MIDI.begin();
   Serial.begin(115200);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   readPots();
+  updateButtons();  
 }
 
 
