@@ -1,4 +1,6 @@
 #include <MIDI.h>
+#include <Keypad.h>
+
 MIDI_CREATE_DEFAULT_INSTANCE();
 
 void setup() {

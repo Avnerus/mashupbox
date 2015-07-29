@@ -1,4 +1,3 @@
-#include <Keypad.h>
 #define _R 9
 #define _G 10
 #define _B 11
@@ -24,7 +23,8 @@ byte colPins[COLS] = {A1, A2, A3, A4};
 
 Color led[4];
 uint8_t button_state[4] = {0,0,0,0};
-Keypad buttons = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+uint8_t key_state[4] = {0,0,0,0};
+uint8_t key_notes[4] = {72,60,72,60};
 
 Color color_states[] = {
   Color(0  , 0  , 0  ),
@@ -37,6 +37,8 @@ Color color_states[] = {
 };
 uint8_t num_color_states = sizeof(color_states) / sizeof(color_states[0]);
 
+Keypad buttons = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+
 void buttonSetup() {
   pinMode(_R, OUTPUT);
   pinMode(_G, OUTPUT);
@@ -45,12 +47,27 @@ void buttonSetup() {
   pinMode(L2, OUTPUT);
   pinMode(L3, OUTPUT);
   pinMode(L4, OUTPUT);
+  
+  buttons.addEventListener(keypadEvent);
 }
 
 void updateButtons() {
-  for (int i = 0; i < 10; i++)
-    writeLeds();
-    readButtons();
+   writeLeds();
+   //readButtons();
+   buttons.getKey();
+}
+
+void keypadEvent(KeypadEvent key){
+  switch (buttons.getState()){
+    case PRESSED:
+        MIDI.sendNoteOn(key_notes[key -1]   ,127,1);
+        button_state[key-1] = (button_state[key-1] + 1) % num_color_states;
+        led[key-1] = color_states[button_state[key-1]];
+        break;     
+    case RELEASED:
+        MIDI.sendNoteOff(key_notes[key -1]   ,127,1);
+        break;
+   }
 }
 
 void readButtons() {
@@ -58,7 +75,11 @@ void readButtons() {
   if (key && key <= 4) {
     button_state[key-1] = (button_state[key-1] + 1) % num_color_states;
     led[key-1] = color_states[button_state[key-1]];
-     MIDI.sendNoteOn(40 - key   ,127,1);  // Send a Note (pitch 42, velo 127 on channel 1)    
+     key_state[key-1] = 1;
+     //MIDI.sendNoteOn(key_notes[key -1]   ,127,1);
+     Serial.print("Key pressed: ");
+     Serial.println((int)key);
+     Serial.print(" : ");    
   }
 }
 
